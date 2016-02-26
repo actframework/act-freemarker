@@ -8,6 +8,7 @@ import act.view.Template;
 import act.view.View;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
+import freemarker.template.TemplateNotFoundException;
 import org.osgl.util.E;
 
 import java.io.IOException;
@@ -27,6 +28,8 @@ public class FreeMarkerView extends View {
         try {
             freemarker.template.Template freemarkerTemplate = conf.getTemplate(resourcePath, context.locale());
             return new FreeMarkerTemplate(freemarkerTemplate);
+        } catch (TemplateNotFoundException e) {
+            return null;
         } catch (IOException e) {
             throw E.ioException(e);
         }

@@ -1,7 +1,9 @@
 package act.view.freemarker;
 
 import act.view.TemplateBase;
+import freemarker.core.ParseException;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.osgl.$;
 import org.osgl.util.E;
 
@@ -24,6 +26,10 @@ public class FreeMarkerTemplate extends TemplateBase {
         Writer w = new StringWriter();
         try {
             tmpl.process(renderArgs, w);
+        } catch (ParseException e) {
+            throw new FreeMarkerError(e);
+        } catch (TemplateException e) {
+            throw new FreeMarkerError(e);
         } catch (IOException e) {
             throw E.ioException(e);
         } catch (Exception e) {

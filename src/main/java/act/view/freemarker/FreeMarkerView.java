@@ -46,7 +46,7 @@ public class FreeMarkerView extends View {
         } catch (TemplateNotFoundException e) {
             return null;
         } catch (ParseException e) {
-            throw new FreeMarkerError(e);
+            throw new FreeMarkerTemplateException(e);
         } catch (IOException e) {
             throw E.ioException(e);
         }

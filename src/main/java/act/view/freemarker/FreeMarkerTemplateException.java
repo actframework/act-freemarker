@@ -3,17 +3,21 @@ package act.view.freemarker;
 import act.Act;
 import act.app.SourceInfo;
 import freemarker.core.ParseException;
+import freemarker.template.TemplateException;
+import org.osgl.$;
+import org.osgl.util.C;
 import org.osgl.util.E;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
-public class FreeMarkerError extends act.view.TemplateException {
+public class FreeMarkerTemplateException extends act.view.TemplateException {
 
-    public FreeMarkerError(ParseException t) {
+    public FreeMarkerTemplateException(ParseException t) {
         super(t);
     }
 
-    public FreeMarkerError(freemarker.template.TemplateException t) {
+    public FreeMarkerTemplateException(freemarker.template.TemplateException t) {
         super(t);
     }
 
@@ -30,7 +34,30 @@ public class FreeMarkerError extends act.view.TemplateException {
 
     @Override
     public String errorMessage() {
+        Throwable t = getCauseOrThis();
+        if (t instanceof ParseException || t instanceof TemplateException) {
+            try {
+                Method m = t.getClass().getDeclaredMethod("getDescription");
+                m.setAccessible(true);
+                return $.invokeVirtual(t, m);
+            } catch (NoSuchMethodException e) {
+                throw E.unexpected(e);
+            }
+        }
         return getCauseOrThis().getMessage();
+    }
+
+    @Override
+    public List<String> stackTrace() {
+        if (getCause() instanceof ParseException) {
+            return C.list();
+        }
+        return super.stackTrace();
+    }
+
+    @Override
+    protected boolean isTemplateEngineInvokeLine(String s) {
+        return s.contains("freemarker.ext.beans.BeansWrapper.invokeMethod");
     }
 
     private static class FreeMarkerSourceInfo extends SourceInfo.Base {

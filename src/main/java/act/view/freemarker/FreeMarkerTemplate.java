@@ -8,7 +8,6 @@ import org.osgl.$;
 import org.osgl.util.E;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
@@ -27,9 +26,9 @@ public class FreeMarkerTemplate extends TemplateBase {
         try {
             tmpl.process(renderArgs, w);
         } catch (ParseException e) {
-            throw new FreeMarkerError(e);
+            throw new FreeMarkerTemplateException(e);
         } catch (TemplateException e) {
-            throw new FreeMarkerError(e);
+            throw new FreeMarkerTemplateException(e);
         } catch (IOException e) {
             throw E.ioException(e);
         } catch (Exception e) {

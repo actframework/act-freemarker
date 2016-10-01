@@ -44,6 +44,10 @@ public class FreeMarkerView extends View {
         } catch (ParseException e) {
             throw new FreeMarkerTemplateException(e);
         } catch (IOException e) {
+            Throwable t = e.getCause();
+            if (null != t && t instanceof ParseException) {
+                throw new FreeMarkerTemplateException((ParseException) t);
+            }
             throw E.ioException(e);
         }
     }

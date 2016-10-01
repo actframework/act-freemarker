@@ -45,7 +45,7 @@ public class FreeMarkerTemplateException extends act.view.TemplateException {
                 throw E.unexpected(e);
             }
         }
-        return getCauseOrThis().getMessage();
+        return t.toString();
     }
 
     @Override

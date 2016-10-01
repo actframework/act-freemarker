@@ -2,6 +2,7 @@ package act.view.freemarker;
 
 import act.Act;
 import act.app.SourceInfo;
+import freemarker.core.InvalidReferenceException;
 import freemarker.core.ParseException;
 import freemarker.template.TemplateException;
 import org.osgl.$;
@@ -36,9 +37,16 @@ public class FreeMarkerTemplateException extends act.view.TemplateException {
     @Override
     public String errorMessage() {
         Throwable t = getCauseOrThis();
-        if (t instanceof ParseException || t instanceof TemplateException) {
+        boolean isParseException = t instanceof ParseException;
+        boolean isTemplateException = t instanceof TemplateException;
+        if (isParseException || isTemplateException) {
             try {
-                Method m = t.getClass().getDeclaredMethod("getDescription");
+                Method m;
+                if (isParseException) {
+                    m = ParseException.class.getDeclaredMethod("getDescription");
+                } else {
+                    m = TemplateException.class.getDeclaredMethod("getDescription");
+                }
                 m.setAccessible(true);
                 return $.invokeVirtual(t, m);
             } catch (NoSuchMethodException e) {
@@ -50,7 +58,8 @@ public class FreeMarkerTemplateException extends act.view.TemplateException {
 
     @Override
     public List<String> stackTrace() {
-        if (getCause() instanceof ParseException) {
+        Throwable t = getCause();
+        if (t instanceof ParseException || t instanceof InvalidReferenceException) {
             return C.list();
         }
         return super.stackTrace();

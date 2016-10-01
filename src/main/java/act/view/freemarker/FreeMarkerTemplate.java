@@ -1,10 +1,13 @@
 package act.view.freemarker;
 
+import act.Act;
+import act.app.ActionContext;
 import act.view.TemplateBase;
 import freemarker.core.ParseException;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.osgl.$;
+import org.osgl.http.H;
 import org.osgl.util.E;
 
 import java.io.IOException;
@@ -18,6 +21,18 @@ public class FreeMarkerTemplate extends TemplateBase {
 
     FreeMarkerTemplate(Template tmpl) {
         this.tmpl = $.notNull(tmpl);
+    }
+
+    @Override
+    protected void merge(Map<String, Object> renderArgs, H.Response response) {
+        if (Act.isDev()) {
+            super.merge(renderArgs, response);
+        }
+        try {
+            tmpl.process(renderArgs, response.writer());
+        } catch (Exception e) {
+            throw E.unexpected(e, "Error output freemarker template");
+        }
     }
 
     @Override

@@ -54,16 +54,10 @@ public class FreeMarkerView extends View {
 
     @Override
     protected void init(final App app) {
-        app.jobManager().on(AppEventId.CLASS_LOADER_INITIALIZED, new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    initConf(app);
-                } catch (IOException e) {
-                    throw E.ioException(e);
-                }
-            }
-        });
+        conf = new Configuration(Configuration.VERSION_2_3_23);
+        conf.setDefaultEncoding("UTF-8");
+        conf.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        conf.setClassLoaderForTemplateLoading(app.classLoader(), templateHome());
     }
 
     List<String> loadContent(String template) {
@@ -83,13 +77,6 @@ public class FreeMarkerView extends View {
         } catch (Exception e) {
             throw E.unexpected(e);
         }
-    }
-
-    private void initConf(App app) throws IOException {
-        conf = new Configuration(Configuration.VERSION_2_3_23);
-        conf.setDefaultEncoding("UTF-8");
-        conf.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        conf.setClassLoaderForTemplateLoading(app.classLoader(), templateHome());
     }
 
 }

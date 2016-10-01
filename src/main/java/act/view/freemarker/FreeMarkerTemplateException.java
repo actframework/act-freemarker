@@ -19,6 +19,7 @@ public class FreeMarkerTemplateException extends act.view.TemplateException {
 
     public FreeMarkerTemplateException(freemarker.template.TemplateException t) {
         super(t);
+        sourceInfo = getJavaSourceInfo(t.getCause());
     }
 
     @Override

@@ -77,7 +77,7 @@ public class FreeMarkerTemplateException extends act.view.TemplateException {
 
         private static List<String> readTemplateSource(String template) {
             FreeMarkerView view = (FreeMarkerView) Act.viewManager().view(FreeMarkerView.ID);
-            return view.loadResources(template);
+            return view.loadContent(template);
         }
     }
 }

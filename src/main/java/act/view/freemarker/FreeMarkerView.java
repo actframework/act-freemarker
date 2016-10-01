@@ -2,7 +2,6 @@ package act.view.freemarker;
 
 import act.app.App;
 import act.app.event.AppEventId;
-import act.app.event.AppEventListener;
 import act.util.ActContext;
 import act.view.Template;
 import act.view.View;
@@ -17,13 +16,10 @@ import org.osgl.$;
 import org.osgl.util.E;
 import org.osgl.util.IO;
 
-import javax.enterprise.context.ApplicationScoped;
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.EventObject;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,11 +49,20 @@ public class FreeMarkerView extends View {
     }
 
     @Override
-    protected void init() {
-        initConf();
+    protected void init(final App app) {
+        app.jobManager().on(AppEventId.CLASS_LOADER_INITIALIZED, new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    initConf(app);
+                } catch (IOException e) {
+                    throw E.ioException(e);
+                }
+            }
+        });
     }
 
-    List<String> loadResources(String template) {
+    List<String> loadContent(String template) {
         TemplateLoader loader = conf.getTemplateLoader();
         try {
             Method lookup = TemplateCache.class.getDeclaredMethod("lookupTemplate", String.class, Locale.class, Object.class);
@@ -76,38 +81,11 @@ public class FreeMarkerView extends View {
         }
     }
 
-    private void initConf() {
+    private void initConf(App app) throws IOException {
         conf = new Configuration(Configuration.VERSION_2_3_23);
         conf.setDefaultEncoding("UTF-8");
         conf.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        conf.setClassLoaderForTemplateLoading(app.classLoader(), templateHome());
     }
 
-    @Override
-    protected void reload(final App app) {
-        app.eventBus().bind(AppEventId.CLASS_LOADER_INITIALIZED, new AppEventListener() {
-            @Override
-            public void on(EventObject event) throws Exception {
-                conf.setClassLoaderForTemplateLoading(app.classLoader(), "/freemarker");
-            }
-
-            @Override
-            public String id() {
-                return "init-freemarker-conf";
-            }
-
-            @Override
-            public void destroy() {
-            }
-
-            @Override
-            public Class<? extends Annotation> scope() {
-                return ApplicationScoped.class;
-            }
-
-            @Override
-            public boolean isDestroyed() {
-                return false;
-            }
-        });
-    }
 }

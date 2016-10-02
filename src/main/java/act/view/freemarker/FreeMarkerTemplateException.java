@@ -20,11 +20,11 @@ public class FreeMarkerTemplateException extends act.view.TemplateException {
 
     public FreeMarkerTemplateException(freemarker.template.TemplateException t) {
         super(t);
-        sourceInfo = getJavaSourceInfo(t.getCause());
     }
 
     @Override
     protected void populateSourceInfo(Throwable t) {
+        sourceInfo = getJavaSourceInfo(t.getCause());
         if (t instanceof ParseException) {
             templateInfo = new FreeMarkerSourceInfo((ParseException) t);
         } else if (t instanceof freemarker.template.TemplateException) {

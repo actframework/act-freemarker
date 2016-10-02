@@ -27,6 +27,7 @@ public class FreeMarkerTemplate extends TemplateBase {
     protected void merge(Map<String, Object> renderArgs, H.Response response) {
         if (Act.isDev()) {
             super.merge(renderArgs, response);
+            return;
         }
         try {
             tmpl.process(renderArgs, response.writer());

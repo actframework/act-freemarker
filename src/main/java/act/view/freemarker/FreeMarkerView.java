@@ -60,7 +60,7 @@ public class FreeMarkerView extends View {
         conf.setClassLoaderForTemplateLoading(app.classLoader(), templateHome());
     }
 
-    List<String> loadContent(String template) {
+    public List<String> loadContent(String template) {
         TemplateLoader loader = conf.getTemplateLoader();
         try {
             Method lookup = TemplateCache.class.getDeclaredMethod("lookupTemplate", String.class, Locale.class, Object.class);

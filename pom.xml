@@ -36,7 +36,7 @@
   <groupId>org.actframework</groupId>
   <artifactId>act-freemarker</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
 
   <name>ACT FreeMarker</name>
   <description>Implement ActFramework View with FreeMarker template engine</description>

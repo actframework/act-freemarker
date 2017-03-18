@@ -1,7 +1,6 @@
 package act.view.freemarker;
 
 import act.app.App;
-import act.app.event.AppEventId;
 import act.util.ActContext;
 import act.view.Template;
 import act.view.View;
@@ -15,6 +14,7 @@ import freemarker.template.TemplateNotFoundException;
 import org.osgl.$;
 import org.osgl.util.E;
 import org.osgl.util.IO;
+import org.osgl.util.S;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -28,6 +28,7 @@ public class FreeMarkerView extends View {
     public static final String ID = "freemarker";
 
     private Configuration conf;
+    private String suffix;
 
     @Override
     public String name() {
@@ -40,7 +41,10 @@ public class FreeMarkerView extends View {
             freemarker.template.Template freemarkerTemplate = conf.getTemplate(resourcePath, context.locale());
             return new FreeMarkerTemplate(freemarkerTemplate);
         } catch (TemplateNotFoundException e) {
-            return null;
+            if (resourcePath.endsWith(suffix)) {
+                return null;
+            }
+            return loadTemplate(S.concat(resourcePath, suffix), context);
         } catch (ParseException e) {
             throw new FreeMarkerTemplateException(e);
         } catch (IOException e) {
@@ -58,6 +62,12 @@ public class FreeMarkerView extends View {
         conf.setDefaultEncoding("UTF-8");
         conf.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         conf.setClassLoaderForTemplateLoading(app.classLoader(), templateHome());
+        suffix = app.config().get("view.freemarker.suffix");
+        if (null == suffix) {
+            suffix = ".ftl";
+        } else {
+            suffix = suffix.startsWith(".") ? suffix : S.concat(".", suffix);
+        }
     }
 
     public List<String> loadContent(String template) {

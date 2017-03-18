@@ -36,7 +36,7 @@
   <groupId>org.actframework</groupId>
   <artifactId>act-freemarker</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
 
   <name>ACT FreeMarker</name>
   <description>Implement ActFramework View with FreeMarker template engine</description>
@@ -46,7 +46,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <git.url>git@github.com:actframework/act-freemarker.git</git.url>
-    <act.version>[1.0.0,2.0.0)</act.version>
+    <act.version>[1.0.2,2.0.0)</act.version>
     <freemarker.version>[2.3.25-incubating,3.0)</freemarker.version>
   </properties>
 

@@ -4,6 +4,7 @@ import act.app.App;
 import act.util.ActContext;
 import act.view.Template;
 import act.view.View;
+import freemarker.cache.StringTemplateLoader;
 import freemarker.cache.TemplateCache;
 import freemarker.cache.TemplateLoader;
 import freemarker.cache.TemplateLookupResult;
@@ -28,6 +29,8 @@ public class FreeMarkerView extends View {
     public static final String ID = "freemarker";
 
     private Configuration conf;
+    private Configuration stringLoaderConf;
+    private StringTemplateLoader stringTemplateLoader;
     private String suffix;
 
     @Override
@@ -57,6 +60,23 @@ public class FreeMarkerView extends View {
     }
 
     @Override
+    protected Template loadInlineTemplate(String s, ActContext actContext) {
+        stringTemplateLoader.putTemplate(s, s);
+        try {
+            freemarker.template.Template freemarkerTemplate = stringLoaderConf.getTemplate(s);
+            return new FreeMarkerTemplate(freemarkerTemplate);
+        } catch (ParseException e) {
+            throw new FreeMarkerTemplateException(e);
+        } catch (IOException e) {
+            Throwable t = e.getCause();
+            if (null != t && t instanceof ParseException) {
+                throw new FreeMarkerTemplateException((ParseException) t);
+            }
+            throw E.ioException(e);
+        }
+    }
+
+    @Override
     protected void init(final App app) {
         conf = new Configuration(Configuration.VERSION_2_3_23);
         conf.setDefaultEncoding("UTF-8");
@@ -68,6 +88,15 @@ public class FreeMarkerView extends View {
         } else {
             suffix = suffix.startsWith(".") ? suffix : S.concat(".", suffix);
         }
+        initStringConf();
+    }
+
+    protected void initStringConf() {
+        stringTemplateLoader = new StringTemplateLoader();
+        stringLoaderConf = new Configuration(Configuration.VERSION_2_3_23);
+        stringLoaderConf.setDefaultEncoding("UTF-8");
+        stringLoaderConf.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        stringLoaderConf.setTemplateLoader(stringTemplateLoader);
     }
 
     public List<String> loadContent(String template) {

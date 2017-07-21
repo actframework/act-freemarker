@@ -8,6 +8,7 @@ import freemarker.template.TemplateException;
 import org.osgl.$;
 import org.osgl.util.C;
 import org.osgl.util.E;
+import org.osgl.util.S;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -36,7 +37,7 @@ public class FreeMarkerTemplateException extends act.view.TemplateException {
 
     @Override
     public String errorMessage() {
-        Throwable t = getCauseOrThis();
+        Throwable t = getRootCause();
         boolean isParseException = t instanceof ParseException;
         boolean isTemplateException = t instanceof TemplateException;
         if (isParseException || isTemplateException) {
@@ -53,7 +54,8 @@ public class FreeMarkerTemplateException extends act.view.TemplateException {
                 throw E.unexpected(e);
             }
         }
-        return t.toString();
+        String msg = t.getLocalizedMessage();
+        return S.blank(msg) ? t.toString() : msg;
     }
 
     @Override

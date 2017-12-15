@@ -37,7 +37,7 @@ public class FreeMarkerTemplateException extends act.view.TemplateException {
 
     @Override
     public String errorMessage() {
-        Throwable t = getRootCause();
+        Throwable t = rootCauseOf(this);
         boolean isParseException = t instanceof ParseException;
         boolean isTemplateException = t instanceof TemplateException;
         if (isParseException || isTemplateException) {

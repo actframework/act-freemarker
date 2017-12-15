@@ -39,7 +39,8 @@ public class FreeMarkerView extends View {
     }
 
     @Override
-    protected Template loadTemplate(String resourcePath, ActContext context) {
+    protected Template loadTemplate(String resourcePath) {
+        ActContext context = ActContext.Base.currentContext();
         try {
             freemarker.template.Template freemarkerTemplate = conf.getTemplate(resourcePath, context.locale());
             return new FreeMarkerTemplate(freemarkerTemplate);
@@ -47,7 +48,7 @@ public class FreeMarkerView extends View {
             if (resourcePath.endsWith(suffix)) {
                 return null;
             }
-            return loadTemplate(S.concat(resourcePath, suffix), context);
+            return loadTemplate(S.concat(resourcePath, suffix));
         } catch (ParseException e) {
             throw new FreeMarkerTemplateException(e);
         } catch (IOException e) {
@@ -60,7 +61,7 @@ public class FreeMarkerView extends View {
     }
 
     @Override
-    protected Template loadInlineTemplate(String s, ActContext actContext) {
+    protected Template loadInlineTemplate(String s) {
         stringTemplateLoader.putTemplate(s, s);
         try {
             freemarker.template.Template freemarkerTemplate = stringLoaderConf.getTemplate(s);

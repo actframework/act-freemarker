@@ -49,7 +49,7 @@ import java.util.Locale;
 @Versioned
 public class FreeMarkerView extends View {
 
-    public static final Version VERSION = Version.get();
+    public static final Version VERSION = Version.of(FreeMarkerView.class);
 
     public static final String ID = "freemarker";
 

@@ -1,5 +1,8 @@
 # Act-FreeMarker Change Log
 
+1.4.1 - 25/Mar/2018
+* update act to 1.8.2
+
 1.4.0 - 20/Feb/2018
 * catch up to act-1.7.0
 

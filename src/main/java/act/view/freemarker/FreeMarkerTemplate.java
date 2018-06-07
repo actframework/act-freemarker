@@ -21,7 +21,6 @@ package act.view.freemarker;
  */
 
 import act.Act;
-import act.app.ActionContext;
 import act.view.TemplateBase;
 import freemarker.core.ParseException;
 import freemarker.template.Template;
@@ -29,6 +28,7 @@ import freemarker.template.TemplateException;
 import org.osgl.$;
 import org.osgl.http.H;
 import org.osgl.util.E;
+import org.rythmengine.utils.IO;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -40,7 +40,7 @@ public class FreeMarkerTemplate extends TemplateBase {
     Template tmpl;
 
     FreeMarkerTemplate(Template tmpl) {
-        this.tmpl = $.notNull(tmpl);
+        this.tmpl = $.requireNotNull(tmpl);
     }
 
     @Override
@@ -49,10 +49,13 @@ public class FreeMarkerTemplate extends TemplateBase {
             super.merge(renderArgs, response);
             return;
         }
+        Writer writer = response.writer();
         try {
-            tmpl.process(renderArgs, response.writer());
+            tmpl.process(renderArgs, writer);
         } catch (Exception e) {
             throw E.unexpected(e, "Error output freemarker template");
+        } finally {
+            IO.close(writer);
         }
     }
 

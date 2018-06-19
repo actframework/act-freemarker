@@ -20,7 +20,7 @@
 
   <artifactId>act-freemarker</artifactId>
   <packaging>jar</packaging>
-  <version>1.3.5</version>
+  <version>1.3.6-SNAPSHOT</version>
 
   <name>ACT FreeMarker</name>
   <description>Implement ActFramework View with FreeMarker template engine</description>

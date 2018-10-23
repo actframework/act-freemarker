@@ -60,6 +60,11 @@ public class FreeMarkerTemplate extends TemplateBase {
     }
 
     @Override
+    public boolean supportCache() {
+        return false;
+    }
+
+    @Override
     protected String render(Map<String, Object> renderArgs) {
         Writer w = new StringWriter();
         try {

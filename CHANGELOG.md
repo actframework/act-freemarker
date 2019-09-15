@@ -1,5 +1,9 @@
 # Act-FreeMarker Change Log
 
+1.3.7 - 15/Sep/2019
+* update act to 1.8.27
+* update freemarker to 2.3.29
+
 1.3.6 - 30/Oct/2018
 * update act to 1.8.8
 * disable template cache for freemarker template

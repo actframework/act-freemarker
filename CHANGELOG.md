@@ -1,5 +1,8 @@
 # Act-FreeMarker Change Log
 
+1.4.0 - 03/Nov/2019
+* update act to 1.8.29
+
 1.3.7 - 15/Sep/2019
 * update act to 1.8.27
 * update freemarker to 2.3.29

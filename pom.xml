@@ -29,12 +29,12 @@
   <parent>
     <groupId>org.actframework</groupId>
     <artifactId>parent</artifactId>
-    <version>1.8.29</version>
+    <version>1.8.33a</version>
   </parent>
 
   <properties>
     <scm.url>git@github.com:actframework/act-freemarker.git</scm.url>
-    <freemarker.version>2.3.29</freemarker.version>
+    <freemarker.version>2.3.30</freemarker.version>
   </properties>
 
   <scm>
